@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://xxjk3jebbkrf"]
+
+[ext_resource type="Shader" path="res://primitives/circle_shader.gdshader" id="1_8eekt"]
+[ext_resource type="QuadMesh" uid="uid://cdwvq776o3tm8" path="res://primitives/unit_quad.tres" id="1_pm0g1"]
+[ext_resource type="Script" path="res://primitives/circle.gd" id="2_m0uxr"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8xbak"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_8eekt")
+shader_parameter/inner_radius = 0.0
+shader_parameter/arc_angle = 1.0
+shader_parameter/fill_color = Color(1, 1, 1, 1)
+shader_parameter/sampling_mode = 0
+shader_parameter/clamp_radius = true
+shader_parameter/clamp_angle = true
+shader_parameter/anti_alias_size = 0.005
+
+[node name="circle" type="MeshInstance3D"]
+mesh = ExtResource("1_pm0g1")
+surface_material_override/0 = SubResource("ShaderMaterial_8xbak")
+script = ExtResource("2_m0uxr")

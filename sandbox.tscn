@@ -1,0 +1,73 @@
+[gd_scene load_steps=8 format=3 uid="uid://dcmpb2n18umvd"]
+
+[ext_resource type="PackedScene" uid="uid://bd2l37xqd0qf0" path="res://examples/speedometer.tscn" id="1_hd5im"]
+[ext_resource type="PackedScene" uid="uid://cpvuvsdj4sefn" path="res://primitives/square.tscn" id="2_nsmog"]
+[ext_resource type="Shader" path="res://primitives/square_shader.gdshader" id="3_i4vvm"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n0lfe"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("3_i4vvm")
+shader_parameter/inner_size = Vector2(0, 0)
+shader_parameter/outer_rounding = Vector2(0, 0)
+shader_parameter/inner_rounding = Vector2(0, 0)
+shader_parameter/fill_color = Color(0.0823529, 0.0823529, 0.121569, 1)
+shader_parameter/anti_alias_size = 0.005
+
+[sub_resource type="Animation" id="Animation_g4h5y"]
+resource_name = "simulate_speed"
+length = 8.0
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("speedometer:speed")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0, 3, 3, 0),
+"points": PackedFloat32Array(42.5, -0.25, 0, 0.8, 4.5, 128.5, -0.7, -1, 0.7, 1, 119.5, -0.6, 0, 0.6, 0, 182.5, -2, -8, 0.25, 0),
+"times": PackedFloat32Array(0, 2.8, 4.2, 8)
+}
+
+[sub_resource type="Animation" id="Animation_2k6tb"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("speedometer:speed")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(0),
+"points": PackedFloat32Array(0, -0.25, 0, 0.25, 0),
+"times": PackedFloat32Array(0)
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hxwon"]
+_data = {
+"RESET": SubResource("Animation_2k6tb"),
+"simulate_speed": SubResource("Animation_g4h5y")
+}
+
+[node name="sandbox" type="Node3D"]
+
+[node name="background" parent="." instance=ExtResource("2_nsmog")]
+transform = Transform3D(8, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, -1)
+surface_material_override/0 = SubResource("ShaderMaterial_n0lfe")
+size = Vector2(8, 4)
+fill_color = Color(0.0823529, 0.0823529, 0.121569, 1)
+
+[node name="speedometer" parent="." instance=ExtResource("1_hd5im")]
+speed_limit = 120.0
+
+[node name="camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+projection = 1
+size = 1.25
+
+[node name="animation_player" type="AnimationPlayer" parent="."]
+autoplay = "simulate_speed"
+movie_quit_on_finish = true
+libraries = {
+"": SubResource("AnimationLibrary_hxwon")
+}

@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://cpvuvsdj4sefn"]
+
+[ext_resource type="Shader" path="res://primitives/square_shader.gdshader" id="1_5vitb"]
+[ext_resource type="QuadMesh" uid="uid://cdwvq776o3tm8" path="res://primitives/unit_quad.tres" id="1_8o6wa"]
+[ext_resource type="Script" path="res://primitives/square.gd" id="2_fb3lt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bxx5a"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_5vitb")
+shader_parameter/inner_size = Vector2(0, 0)
+shader_parameter/outer_rounding = Vector2(0, 0)
+shader_parameter/inner_rounding = Vector2(0, 0)
+shader_parameter/fill_color = Color(1, 1, 1, 1)
+shader_parameter/anti_alias_size = 0.005
+
+[node name="square" type="MeshInstance3D"]
+mesh = ExtResource("1_8o6wa")
+surface_material_override/0 = SubResource("ShaderMaterial_bxx5a")
+script = ExtResource("2_fb3lt")
