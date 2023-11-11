@@ -19,14 +19,14 @@ resource_name = "ensure non-negative"
 script = ExtResource("2_x3u7e")
 expression = "maxf(0.0, value)"
 name = &"ensure non-negative"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_t8f4d"]
 resource_name = "map range"
 script = ExtResource("2_x3u7e")
-expression = "0.75 * clamp(value / max_speed, 0.0, 1.0)"
+expression = "0.75 * clampf(value / max_speed, 0.0, 1.0)"
 name = &"map range"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_d7jvf"]
 resource_name = "set arc fraction"
@@ -34,21 +34,21 @@ script = ExtResource("3_s8ebx")
 target_path = NodePath("ring_gauge")
 property_path = "arc_fraction"
 name = &"set arc fraction"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_55hkp"]
 resource_name = "update arc"
 script = ExtResource("3_l2dvd")
 steps = Array[Resource("res://data_bindings/data_processor.gd")]([SubResource("Resource_t8f4d"), SubResource("Resource_d7jvf")])
 name = &"update arc"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_aihxa"]
-resource_name = "to string"
+resource_name = "stringify"
 script = ExtResource("2_x3u7e")
 expression = "str(int(value))"
-name = &"to string"
-disabled = null
+name = &"stringify"
+disabled = false
 
 [sub_resource type="Resource" id="Resource_qyd6j"]
 resource_name = "set label text"
@@ -56,28 +56,28 @@ script = ExtResource("3_s8ebx")
 target_path = NodePath("speed_label")
 property_path = "text"
 name = &"set label text"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_t3grk"]
 resource_name = "update label"
 script = ExtResource("3_l2dvd")
 steps = Array[Resource("res://data_bindings/data_processor.gd")]([SubResource("Resource_aihxa"), SubResource("Resource_qyd6j")])
 name = &"update label"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_uqtae"]
 resource_name = "map to [0, 1]"
 script = ExtResource("2_x3u7e")
 expression = "(value - speed_limit) / warning_range"
 name = &"map to [0, 1]"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_wkkr8"]
 resource_name = "sample gradient"
 script = ExtResource("2_x3u7e")
 expression = "warning_gradient.sample(value)"
 name = &"sample gradient"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_yp18i"]
 resource_name = "set label color"
@@ -85,21 +85,21 @@ script = ExtResource("3_s8ebx")
 target_path = NodePath("speed_label")
 property_path = "modulate"
 name = &"set label color"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_p74u0"]
 resource_name = "update warning"
 script = ExtResource("3_l2dvd")
 steps = Array[Resource("res://data_bindings/data_processor.gd")]([SubResource("Resource_uqtae"), SubResource("Resource_wkkr8"), SubResource("Resource_yp18i")])
 name = &"update warning"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_b3r8f"]
 resource_name = "update sequence"
 script = ExtResource("3_l2dvd")
 steps = Array[Resource("res://data_bindings/data_processor.gd")]([SubResource("Resource_4dknl"), SubResource("Resource_55hkp"), SubResource("Resource_t3grk"), SubResource("Resource_p74u0")])
 name = &"update sequence"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_8bm10"]
 resource_name = "speed"
@@ -114,7 +114,7 @@ script = ExtResource("3_s8ebx")
 target_path = NodePath("speed_units_label")
 property_path = "text"
 name = &"update units label"
-disabled = null
+disabled = false
 
 [sub_resource type="Resource" id="Resource_mtqte"]
 resource_name = "speed_units"
@@ -152,7 +152,7 @@ colors = PackedColorArray(0.0874, 0.127803, 0.23, 1, 0.1216, 0.177813, 0.32, 1, 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_akv1m"]
 gradient = SubResource("Gradient_h4ld2")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_1h7r4"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i843b"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_652km")
@@ -176,7 +176,7 @@ fill = 1
 fill_from = Vector2(1, 0.5)
 fill_to = Vector2(0, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_8m8t7"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0s4vm"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_652km")
@@ -189,7 +189,7 @@ shader_parameter/clamp_angle = false
 shader_parameter/anti_alias_size = 0.005
 shader_parameter/fill_texture = SubResource("GradientTexture2D_edjx1")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_50u5b"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_p4h57"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("2_652km")
@@ -215,7 +215,7 @@ warning_gradient = SubResource("Gradient_78075")
 [node name="background_circle" parent="." instance=ExtResource("1_igti1")]
 transform = Transform3D(1.08, 0, 0, 0, 1.08, 0, 0, 0, 1, 0, 0, 0)
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_1h7r4")
+surface_material_override/0 = SubResource("ShaderMaterial_i843b")
 size = Vector2(1.08, 1.08)
 fill_texture = SubResource("GradientTexture1D_akv1m")
 sampling_mode = 1
@@ -223,7 +223,7 @@ sampling_mode = 1
 [node name="ring_gauge_hint" parent="." instance=ExtResource("1_igti1")]
 transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0.1)
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_8m8t7")
+surface_material_override/0 = SubResource("ShaderMaterial_0s4vm")
 size = Vector2(1, 1)
 fill_fraction = 0.3
 arc_fraction = 0.75
@@ -235,7 +235,7 @@ clamp_angle = false
 [node name="ring_gauge" parent="." instance=ExtResource("1_igti1")]
 transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0.2)
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_50u5b")
+surface_material_override/0 = SubResource("ShaderMaterial_p4h57")
 size = Vector2(1, 1)
 fill_fraction = 0.3
 arc_fraction = 0.0
