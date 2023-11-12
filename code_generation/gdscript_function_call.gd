@@ -3,27 +3,22 @@ class_name GdscriptFunctionCall
 extends GdscriptExpression
 
 
-@export var function : GdscriptFunction
+@export var function : GdscriptExpression
 
 @export var arguments : Array[GdscriptExpression] = []
 
-@export var object : GdscriptExpression
-
 
 @warning_ignore("shadowed_variable")
-static func create(function : GdscriptFunction, arguments : Array[GdscriptExpression], object : GdscriptExpression = null) -> GdscriptFunctionCall:
+static func create(function : GdscriptExpression, arguments : Array[GdscriptExpression] = []) -> GdscriptFunctionCall:
 	var expression := GdscriptFunctionCall.new()
 	expression.function = function
 	expression.arguments = arguments
-	expression.object = object
 	return expression
 
 
 func generate_code() -> String:
 	var code := ""
-	if object != null:
-		code += object.generate_code() + "."
-	code += function.name + "("
+	code += function.generate_code() + "("
 	for i in arguments.size():
 		if i > 0:
 			code += ", "

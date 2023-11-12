@@ -5,12 +5,20 @@ extends GdscriptExpression
 
 @export var symbol : GdscriptSymbol
 
+@export var object : GdscriptExpression
 
-static func to(target : GdscriptSymbol) -> GdscriptReference:
-	var ref := GdscriptReference.new()
-	ref.symbol = target
-	return ref
+
+@warning_ignore("shadowed_variable")
+static func create(symbol : GdscriptSymbol, object : GdscriptExpression = null) -> GdscriptReference:
+	var expression := GdscriptReference.new()
+	expression.symbol = symbol
+	expression.object = object
+	return expression
 
 
 func generate_code() -> String:
-	return symbol.name
+	var code := ""
+	if object != null:
+		code += object.generate_code() + "."
+	code += symbol.name
+	return code

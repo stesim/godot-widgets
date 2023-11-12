@@ -1,0 +1,98 @@
+[gd_resource type="Resource" script_class="WidgetDefinition" load_steps=18 format=3 uid="uid://cbhju4wym5dc7"]
+
+[ext_resource type="Script" path="res://data_bindings/data_binding.gd" id="1_w5mb8"]
+[ext_resource type="Script" path="res://data_bindings/data_property_source.gd" id="2_kse3f"]
+[ext_resource type="Script" path="res://data_bindings/data_transform_expression.gd" id="3_lsf5q"]
+[ext_resource type="Script" path="res://widget_property.gd" id="4_6jyb4"]
+[ext_resource type="Script" path="res://widget_definition.gd" id="5_yh2kb"]
+[ext_resource type="Script" path="res://examples/speedometer.generated.gd" id="6_gwwsj"]
+
+[sub_resource type="Resource" id="Resource_sgigb"]
+resource_name = "speed"
+script = ExtResource("2_kse3f")
+target_path = NodePath("")
+property_path = "speed"
+type = 3
+
+[sub_resource type="Resource" id="Resource_n8gu3"]
+resource_name = "stringify"
+script = ExtResource("3_lsf5q")
+inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_sgigb")])
+input_names = Array[StringName]([&"speed"])
+expression = "str(int(speed))"
+type = 4
+
+[sub_resource type="Resource" id="Resource_j3lh0"]
+resource_name = "speed_label » text"
+script = ExtResource("1_w5mb8")
+target_path = NodePath("speed_label")
+property_path = "text"
+source = SubResource("Resource_n8gu3")
+
+[sub_resource type="Resource" id="Resource_wowjr"]
+resource_name = "speed"
+script = ExtResource("2_kse3f")
+target_path = NodePath("")
+property_path = "speed"
+type = 3
+
+[sub_resource type="Resource" id="Resource_4gkln"]
+resource_name = "max speed"
+script = ExtResource("2_kse3f")
+target_path = NodePath("")
+property_path = "max speed"
+type = 3
+
+[sub_resource type="Resource" id="Resource_i1gce"]
+resource_name = "clamp speed"
+script = ExtResource("3_lsf5q")
+inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_wowjr"), SubResource("Resource_4gkln")])
+input_names = Array[StringName]([&"speed", &"max_speed"])
+expression = "clampf(speed, 0.0, max_speed)"
+type = 3
+
+[sub_resource type="Resource" id="Resource_5skqy"]
+resource_name = "max speed"
+script = ExtResource("2_kse3f")
+target_path = NodePath("")
+property_path = "max speed"
+type = 3
+
+[sub_resource type="Resource" id="Resource_vwih0"]
+resource_name = "to arc fraction"
+script = ExtResource("3_lsf5q")
+inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_i1gce"), SubResource("Resource_5skqy")])
+input_names = Array[StringName]([&"speed", &"max_speed"])
+expression = "0.75 * (speed / max_speed)"
+type = 3
+
+[sub_resource type="Resource" id="Resource_drrce"]
+resource_name = "ring_gauge » arc_fraction"
+script = ExtResource("1_w5mb8")
+target_path = NodePath("ring_gauge")
+property_path = "arc_fraction"
+source = SubResource("Resource_vwih0")
+
+[sub_resource type="Resource" id="Resource_p8mu4"]
+resource_name = "speed"
+script = ExtResource("4_6jyb4")
+type = 3
+object_type = &""
+default_value = 0.0
+
+[sub_resource type="Resource" id="Resource_fbf71"]
+resource_name = "max speed"
+script = ExtResource("4_6jyb4")
+type = 3
+object_type = &""
+default_value = 240.0
+
+[resource]
+script = ExtResource("5_yh2kb")
+update_script = false
+target_script = ExtResource("6_gwwsj")
+overwrite_target_script = true
+dry_run = false
+base_class = &"Node"
+properties = Array[ExtResource("4_6jyb4")]([SubResource("Resource_p8mu4"), SubResource("Resource_fbf71")])
+bindings = Array[ExtResource("1_w5mb8")]([SubResource("Resource_j3lh0"), SubResource("Resource_drrce")])

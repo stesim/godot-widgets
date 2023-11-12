@@ -1,11 +1,22 @@
 @tool
 class_name GdscriptParameter
-extends GdscriptSymbol
+extends GdscriptVariable
 
 
-static func create(name_ : StringName, type_ : GdscriptType, default_value : GdscriptExpression = null) -> GdscriptParameter:
+@warning_ignore("shadowed_variable")
+static func create_parameter(name : StringName, type : GdscriptType, default_value : GdscriptExpression = null) -> GdscriptParameter:
 	var statement := GdscriptParameter.new()
-	statement.name = name_
-	statement.type = type_
+	statement.name = name
+	statement.type = type
 	statement.initial_value = default_value
 	return statement
+
+
+func generate_code() -> String:
+	var code := name
+	if type != null:
+		code += " : " + type.generate_code()
+	if initial_value != null:
+		code += " = " if type != null else " := "
+		code += initial_value.generate_code()
+	return code

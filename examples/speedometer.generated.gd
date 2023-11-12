@@ -1,102 +1,55 @@
 @tool
-extends Node3D
+extends Node
 
-
-@export var max_speed : float = 0.0
 
 @export var speed : float = 0.0 : set = _set_speed
 
-@export var speed_units : String = "" : set = _set_speed_units
+@export var max_speed : float = 240.0 : set = _set_max_speed
 
-@export var speed_limit : float = 0.0
 
-@export var warning_range : float = 0.0
+@onready var _speed_label := get_node(^"speed_label")
 
-@export var warning_gradient : Resource = null
+@onready var _ring_gauge := get_node(^"ring_gauge")
+
+
+func _ready():
+	_update_speed_label_text()
+	_update_ring_gauge_arc_fraction()
+
+
+func _update_speed_label_text() -> void:
+	var stringify_result : String = _stringify(speed)
+	_speed_label.text = stringify_result
+
+
+func _stringify(speed : float) -> String:
+	return str(int(speed))
+
+
+func _update_ring_gauge_arc_fraction() -> void:
+	var clamp_speed_result : float = _clamp_speed(speed, max_speed)
+	var to_arc_fraction_result : float = _to_arc_fraction(clamp_speed_result, max_speed)
+	_ring_gauge.arc_fraction = to_arc_fraction_result
+
+
+func _clamp_speed(speed : float, max_speed : float) -> float:
+	return clampf(speed, 0.0, max_speed)
+
+
+func _to_arc_fraction(speed : float, max_speed : float) -> float:
+	return 0.75 * (speed / max_speed)
 
 
 func _set_speed(value : float) -> void:
 	speed = value
-	_update_sequence(speed)
+	if is_inside_tree():
+		_update_speed_label_text()
+		_update_ring_gauge_arc_fraction()
 
 
-func _update_sequence(value : Variant) -> Variant:
-	var processed_value : Variant = value
-	processed_value = _ensure_non_negative(processed_value)
-	processed_value = _update_arc(processed_value)
-	processed_value = _update_label(processed_value)
-	processed_value = _update_warning(processed_value)
-	return value
-
-
-func _ensure_non_negative(value : Variant) -> Variant:
-	return maxf(0.0, value)
-
-
-func _update_arc(value : Variant) -> Variant:
-	var processed_value : Variant = value
-	processed_value = _map_range(processed_value)
-	processed_value = _set_arc_fraction(processed_value)
-	return value
-
-
-func _map_range(value : Variant) -> Variant:
-	return 0.75 * clampf(value / max_speed, 0.0, 1.0)
-
-
-func _set_arc_fraction(value : Variant) -> Variant:
-	var target : Node = get_node(^"ring_gauge")
-	target.arc_fraction = value
-	return value
-
-
-func _update_label(value : Variant) -> Variant:
-	var processed_value : Variant = value
-	processed_value = _stringify(processed_value)
-	processed_value = _set_label_text(processed_value)
-	return value
-
-
-func _stringify(value : Variant) -> Variant:
-	return str(int(value))
-
-
-func _set_label_text(value : Variant) -> Variant:
-	var target : Node = get_node(^"speed_label")
-	target.text = value
-	return value
-
-
-func _update_warning(value : Variant) -> Variant:
-	var processed_value : Variant = value
-	processed_value = _map_to_0_1_(processed_value)
-	processed_value = _sample_gradient(processed_value)
-	processed_value = _set_label_color(processed_value)
-	return value
-
-
-func _map_to_0_1_(value : Variant) -> Variant:
-	return (value - speed_limit) / warning_range
-
-
-func _sample_gradient(value : Variant) -> Variant:
-	return warning_gradient.sample(value)
-
-
-func _set_label_color(value : Variant) -> Variant:
-	var target : Node = get_node(^"speed_label")
-	target.modulate = value
-	return value
-
-
-func _set_speed_units(value : String) -> void:
-	speed_units = value
-	_update_units_label(speed_units)
-
-
-func _update_units_label(value : Variant) -> Variant:
-	var target : Node = get_node(^"speed_units_label")
-	target.text = value
-	return value
+func _set_max_speed(value : float) -> void:
+	max_speed = value
+	if is_inside_tree():
+		_update_ring_gauge_arc_fraction()
 
 

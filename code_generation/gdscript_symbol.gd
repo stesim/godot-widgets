@@ -5,16 +5,13 @@ extends GdscriptStatement
 
 @export var name : StringName
 
-@export var type : GdscriptType
 
-@export var initial_value : GdscriptExpression
+@warning_ignore("shadowed_variable")
+static func create_external_symbol(name : StringName) -> GdscriptSymbol:
+	var statement := GdscriptSymbol.new()
+	statement.name = name
+	return statement
 
 
 func generate_code() -> String:
-	var code := name
-	if type != null:
-		code += " : " + type.generate_code()
-	if initial_value != null:
-		code += " = " if type != null else " := "
-		code += initial_value.generate_code()
-	return code
+	return name

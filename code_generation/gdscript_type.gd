@@ -49,7 +49,7 @@ static var ARRAY := create(Base.ARRAY)
 @export var specific : StringName
 
 
-static func create(base_type : Base, specialization := "") -> GdscriptType:
+static func create(base_type : Base, specialization := &"") -> GdscriptType:
 	var type := GdscriptType.new()
 	type.base = base_type
 	type.specific = specialization

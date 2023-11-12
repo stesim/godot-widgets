@@ -1,17 +1,25 @@
 @tool
 class_name GdscriptFunction
-extends Resource
+extends GdscriptSymbol
 
 
-@export var name : StringName
-
-@export var parameters : Array[GdscriptSymbol] = []
+@export var parameters : Array[GdscriptParameter] = []
 
 @export var return_type : GdscriptType = null
 
 @export var body : Array[GdscriptStatement] = []
 
 @export var is_external := false
+
+
+@warning_ignore("shadowed_variable")
+static func create(name : StringName, parameters : Array[GdscriptParameter] = [], return_type : GdscriptType = null, body : Array[GdscriptStatement] = []) -> GdscriptFunction:
+	var function := GdscriptFunction.new()
+	function.name = name
+	function.parameters = parameters
+	function.return_type = return_type
+	function.body = body
+	return function
 
 
 @warning_ignore("shadowed_variable")
@@ -37,5 +45,5 @@ func generate_code() -> String:
 		code += "\tpass\n"
 	else:
 		for statement in body:
-			code += "\t" + statement.generate_code()
+			code += statement.generate_code().indent("\t")
 	return code
