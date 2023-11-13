@@ -64,7 +64,7 @@ func get_default_value() -> Variant:
 
 
 func is_same_as(other : DataType) -> bool:
-	return other == self or other.primitive_type == self.primitive_type
+	return other == self or (other.is_same_kind_as(self) and other.primitive_type == self.primitive_type)
 
 
 func to_string_name() -> StringName:

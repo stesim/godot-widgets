@@ -17,7 +17,7 @@ func get_default_value() -> Variant:
 
 
 func is_same_as(other : DataType) -> bool:
-	return other == self or other.get_script() == self.get_script()
+	return other == self or other.is_same_kind_as(self)
 
 
 func to_string_name() -> StringName:

@@ -28,7 +28,11 @@ func _stringify_value(value_ : Variant) -> String:
 			return "&" + _stringify_value(String(value_))
 		TYPE_NODE_PATH:
 			return "^" + _stringify_value(String(value_))
+		TYPE_ARRAY:
+			return _stringify_array(value_)
 		TYPE_NIL:
+			return "null"
+		TYPE_OBJECT: # HACK: serialize objects as null
 			return "null"
 	assert(false)
 	return ""
@@ -47,3 +51,14 @@ func _stringify_float(value_ : float) -> String:
 	if significant_length < string_length:
 		stringified = stringified.substr(0, significant_length)
 	return stringified
+
+
+# NOTE: needs to take Variant parameter as array may be typed
+func _stringify_array(array : Variant) -> String:
+	var code := "["
+	for i in array.size():
+		if i > 0:
+			code += ", "
+		code += _stringify_value(array[i])
+	code += "]"
+	return code

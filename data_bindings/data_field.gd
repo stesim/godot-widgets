@@ -85,6 +85,6 @@ func _add_property_array_type_hints(property : Dictionary, array_type : ArrayDat
 	property.hint = PROPERTY_HINT_ARRAY_TYPE
 	property.hint_string = "%d/%d:%s" % [
 		dummy_property.type,
-		dummy_property.hint,
-		dummy_property.hint_string,
+		dummy_property.get(&"hint", PROPERTY_HINT_NONE),
+		dummy_property.get(&"hint_string", ""),
 	]

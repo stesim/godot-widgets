@@ -49,14 +49,10 @@ func _generate_ready_function() -> void:
 
 func _generate_properties() -> void:
 	for property in _definition.properties:
-		var default_value : GdscriptExpression = (
-			null if property.type == null or property.type is ObjectDataType
-			else GdscriptLiteral.create(property.default_value)
-		)
 		var generated_property := GdscriptProperty.create_export(
 			_generator.to_unique_symbol_name(property.name),
 			_to_gdscript_type(property.type),
-			default_value,
+			GdscriptLiteral.create(property.default_value),
 		)
 		_generator.add_property(generated_property)
 		_widget_properties[property] = generated_property
@@ -281,7 +277,13 @@ func _to_gdscript_type(type : DataType) -> GdscriptType:
 	elif type is ObjectDataType:
 		return _generator.get_object_type(type.global_class)
 	elif type is ArrayDataType:
-		return GdscriptType.create(GdscriptType.Base.ARRAY, type.element_type.to_string_name())
+		# NOTE: GDscript does not currently support nested typed arrays, so the
+		#       inner array is declared as a generic array
+		var element_type_string : StringName = (
+			&"Array" if type.element_type is ArrayDataType
+			else type.element_type.to_string_name()
+		)
+		return GdscriptType.create(GdscriptType.Base.ARRAY, element_type_string)
 	elif type is VoidDataType:
 		return GdscriptType.VOID
 	push_error("invalid data type")

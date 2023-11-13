@@ -30,7 +30,7 @@ func get_default_value() -> Variant:
 
 
 func is_same_as(other : DataType) -> bool:
-	return other == self or other.global_class == self.global_class
+	return other == self or (other.is_same_kind_as(self) and other.global_class == self.global_class)
 
 
 func to_string_name() -> StringName:
