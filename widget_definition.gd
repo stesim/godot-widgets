@@ -41,7 +41,7 @@ func _update_script() -> void:
 		push_error("no target script selected")
 		return
 	if not overwrite_target_script:
-		push_warning("WARNING: the target script will be overwritten! If you want to continue, confirm by setting overwrite_target_script to true and try again.")
+		push_error("WARNING: the target script will be overwritten! If you want to continue, confirm by setting overwrite_target_script to true and try again.")
 		return
 
 	target_script.source_code = WidgetCodeGenerator.generate(self)

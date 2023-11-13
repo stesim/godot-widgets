@@ -2,15 +2,15 @@
 extends Node
 
 
-@export var speed : float : set = _set_speed
+@export var speed : float = 0.0 : set = _set_speed
 
-@export var max_speed : float : set = _set_max_speed
+@export var max_speed : float = 240.0 : set = _set_max_speed
 
-@export var speed_units : String : set = _set_speed_units
+@export var speed_units : String = "km/h" : set = _set_speed_units
 
-@export var speed_limit : float : set = _set_speed_limit
+@export var speed_limit : float = 50.0 : set = _set_speed_limit
 
-@export var warning_range : float : set = _set_warning_range
+@export var warning_range : float = 10.0 : set = _set_warning_range
 
 @export var warning_gradient : Gradient : set = _set_warning_gradient
 

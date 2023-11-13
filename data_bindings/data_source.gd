@@ -4,4 +4,4 @@ extends Resource
 
 
 func get_data_type() -> DataType:
-	return DataType.VOID
+	return VoidDataType.VOID

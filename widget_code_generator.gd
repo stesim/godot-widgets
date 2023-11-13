@@ -49,9 +49,14 @@ func _generate_ready_function() -> void:
 
 func _generate_properties() -> void:
 	for property in _definition.properties:
+		var default_value : GdscriptExpression = (
+			null if property.type == null or property.type is ObjectDataType
+			else GdscriptLiteral.create(property.default_value)
+		)
 		var generated_property := GdscriptProperty.create_export(
 			_generator.to_unique_symbol_name(property.name),
 			_to_gdscript_type(property.type),
+			default_value,
 		)
 		_generator.add_property(generated_property)
 		_widget_properties[property] = generated_property
@@ -271,8 +276,13 @@ func _create_reference_from_property_path(path : NodePath, object : GdscriptExpr
 
 func _to_gdscript_type(type : DataType) -> GdscriptType:
 	# TODO: use caching for all types
-	match type.base:
-		DataType.Base.OBJECT:
-			return _generator.get_object_type(type.specialization)
-		_:
-			return GdscriptType.create(int(type.base), type.specialization)
+	if type is PrimitiveDataType:
+		return GdscriptType.create(type.primitive_type)
+	elif type is ObjectDataType:
+		return _generator.get_object_type(type.global_class)
+	elif type is ArrayDataType:
+		return GdscriptType.create(GdscriptType.Base.ARRAY, type.element_type.to_string_name())
+	elif type is VoidDataType:
+		return GdscriptType.VOID
+	push_error("invalid data type")
+	return null
