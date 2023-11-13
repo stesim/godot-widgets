@@ -49,17 +49,12 @@ func _generate_ready_function() -> void:
 
 func _generate_properties() -> void:
 	for property in _definition.properties:
-		var type := GdscriptType.create(
-			int(property.type),
-			property.object_type if property.type == WidgetProperty.DataType.OBJECT else &""
-		)
 		var generated_property := GdscriptProperty.create_export(
 			_generator.to_unique_symbol_name(property.name),
-			type,
-			GdscriptLiteral.create(property.default_value),
+			_to_gdscript_type(property.type),
 		)
 		_generator.add_property(generated_property)
-		_widget_properties[property.name] = generated_property
+		_widget_properties[property] = generated_property
 
 
 class BindingGenerationContext extends RefCounted:
@@ -112,12 +107,15 @@ func _generate_data_source_code(context : BindingGenerationContext, data_source 
 	if data_source in context.source_outputs:
 		return context.source_outputs[data_source].expression
 
-	var data_type := GdscriptType.create(int(data_source.get_data_type()))
+	var data_type := _to_gdscript_type(data_source.get_data_type())
 
 	var output : GdscriptExpression
+	if data_source is DataFieldSource:
+		output = _generate_data_field_source_code(data_source)
+		if output != null:
+			_add_binding_dependency(context, data_source)
 	if data_source is DataPropertySource:
 		output = _generate_data_property_source_code(context, data_source, data_type)
-		_add_binding_dependency(context, data_source)
 	elif data_source is DataTransformExpression:
 		output = _generate_data_transform_expression_code(context, data_source, data_type)
 	context.source_outputs[data_source] = {
@@ -125,6 +123,16 @@ func _generate_data_source_code(context : BindingGenerationContext, data_source 
 		type = data_type,
 	}
 	return output
+
+
+func _generate_data_field_source_code(data_source : DataFieldSource) -> GdscriptExpression:
+	if data_source.field == null or not data_source.field in _widget_properties:
+		push_error("invalid data source field")
+		return null
+
+	var generated_property : GdscriptProperty = _widget_properties[data_source.field]
+	var property_reference := GdscriptReference.create(generated_property)
+	return property_reference
 
 
 func _generate_data_property_source_code(context : BindingGenerationContext, data_source : DataPropertySource, data_type : GdscriptType) -> GdscriptExpression:
@@ -188,16 +196,12 @@ func _generate_data_transform_expression_code(context : BindingGenerationContext
 	return variable_reference
 
 
-func _add_binding_dependency(context : BindingGenerationContext, property_source : DataPropertySource) -> void:
-	if not property_source.target_path.is_empty():
-		return
-	var root_property_name := NodePath(property_source.property_path).get_as_property_path().get_subname(0)
-	var generated_property : GdscriptProperty = _widget_properties.get(root_property_name)
-	if generated_property == null:
-		return
+func _add_binding_dependency(context : BindingGenerationContext, property_source : DataFieldSource) -> void:
+	var generated_property : GdscriptProperty = _widget_properties[property_source.field]
 
 	if not generated_property in _binding_dependencies:
 		_binding_dependencies[generated_property] = {}
+
 	var property_dependents : Dictionary = _binding_dependencies[generated_property]
 	property_dependents[context.binding] = context.function
 
@@ -256,13 +260,6 @@ func _get_node_property(path : NodePath, type : GdscriptType) -> GdscriptPropert
 
 
 func _create_reference_from_property_path(path : NodePath, object : GdscriptExpression = null) -> GdscriptReference:
-	var is_own_property := object == null and path.get_subname_count() == 1
-	if is_own_property:
-		var property_name := path.get_subname(0)
-		if property_name in _widget_properties:
-			return GdscriptReference.create(_widget_properties[property_name])
-
-
 	var property_reference := object
 	for i in path.get_subname_count():
 		property_reference = GdscriptReference.create(
@@ -270,3 +267,12 @@ func _create_reference_from_property_path(path : NodePath, object : GdscriptExpr
 			property_reference,
 		)
 	return property_reference
+
+
+func _to_gdscript_type(type : DataType) -> GdscriptType:
+	# TODO: use caching for all types
+	match type.base:
+		DataType.Base.OBJECT:
+			return _generator.get_object_type(type.specialization)
+		_:
+			return GdscriptType.create(int(type.base), type.specialization)

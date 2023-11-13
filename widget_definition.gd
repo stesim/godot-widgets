@@ -20,7 +20,7 @@ extends Resource
 
 @export var base_class := &"Node"
 
-@export var properties : Array[WidgetProperty] = []
+@export var properties : Array[DataField] = []
 
 @export var bindings : Array[DataBinding] = []
 

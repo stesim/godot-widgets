@@ -66,7 +66,7 @@ func get_object_type(name : StringName) -> GdscriptType:
 	if type == null:
 		type = GdscriptType.new()
 		type.base = GdscriptType.Base.OBJECT
-		type.specific = name
+		type.specialization = name
 		_object_types[name] = type
 	return type
 

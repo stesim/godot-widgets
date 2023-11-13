@@ -1,26 +1,42 @@
-[gd_resource type="Resource" script_class="WidgetDefinition" load_steps=18 format=3 uid="uid://cbhju4wym5dc7"]
+[gd_resource type="Resource" script_class="WidgetDefinition" load_steps=42 format=3 uid="uid://cbhju4wym5dc7"]
 
 [ext_resource type="Script" path="res://data_bindings/data_binding.gd" id="1_w5mb8"]
-[ext_resource type="Script" path="res://data_bindings/data_property_source.gd" id="2_kse3f"]
+[ext_resource type="Script" path="res://data_bindings/data_field.gd" id="2_jw5kw"]
+[ext_resource type="Script" path="res://data_bindings/data_type.gd" id="3_4o61m"]
 [ext_resource type="Script" path="res://data_bindings/data_transform_expression.gd" id="3_lsf5q"]
-[ext_resource type="Script" path="res://widget_property.gd" id="4_6jyb4"]
+[ext_resource type="Script" path="res://data_bindings/data_field_source.gd" id="4_nuqdj"]
 [ext_resource type="Script" path="res://widget_definition.gd" id="5_yh2kb"]
 [ext_resource type="Script" path="res://examples/speedometer.generated.gd" id="6_gwwsj"]
 
-[sub_resource type="Resource" id="Resource_sgigb"]
+[sub_resource type="Resource" id="Resource_yia0a"]
+resource_name = "float"
+script = ExtResource("3_4o61m")
+base = 3
+specialization = &""
+
+[sub_resource type="Resource" id="Resource_y036y"]
 resource_name = "speed"
-script = ExtResource("2_kse3f")
-target_path = NodePath("")
-property_path = "speed"
-type = 3
+script = ExtResource("2_jw5kw")
+type = SubResource("Resource_yia0a")
+
+[sub_resource type="Resource" id="Resource_hlc6s"]
+resource_name = "field: speed"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_y036y")
+
+[sub_resource type="Resource" id="Resource_0c4mt"]
+resource_name = "String"
+script = ExtResource("3_4o61m")
+base = 4
+specialization = &""
 
 [sub_resource type="Resource" id="Resource_n8gu3"]
-resource_name = "stringify"
+resource_name = "stringify speed"
 script = ExtResource("3_lsf5q")
-inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_sgigb")])
+inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_hlc6s")])
 input_names = Array[StringName]([&"speed"])
 expression = "str(int(speed))"
-type = 4
+type = SubResource("Resource_0c4mt")
 
 [sub_resource type="Resource" id="Resource_j3lh0"]
 resource_name = "speed_label » text"
@@ -29,42 +45,53 @@ target_path = NodePath("speed_label")
 property_path = "text"
 source = SubResource("Resource_n8gu3")
 
-[sub_resource type="Resource" id="Resource_wowjr"]
-resource_name = "speed"
-script = ExtResource("2_kse3f")
-target_path = NodePath("")
-property_path = "speed"
-type = 3
+[sub_resource type="Resource" id="Resource_a602k"]
+resource_name = "field: speed"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_y036y")
 
-[sub_resource type="Resource" id="Resource_4gkln"]
+[sub_resource type="Resource" id="Resource_upke4"]
 resource_name = "max speed"
-script = ExtResource("2_kse3f")
-target_path = NodePath("")
-property_path = "max speed"
-type = 3
+script = ExtResource("2_jw5kw")
+type = SubResource("Resource_yia0a")
+
+[sub_resource type="Resource" id="Resource_xdycy"]
+resource_name = "field: max speed"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_upke4")
+
+[sub_resource type="Resource" id="Resource_exs8f"]
+resource_name = "float"
+script = ExtResource("3_4o61m")
+base = 3
+specialization = &""
 
 [sub_resource type="Resource" id="Resource_i1gce"]
 resource_name = "clamp speed"
 script = ExtResource("3_lsf5q")
-inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_wowjr"), SubResource("Resource_4gkln")])
+inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_a602k"), SubResource("Resource_xdycy")])
 input_names = Array[StringName]([&"speed", &"max_speed"])
 expression = "clampf(speed, 0.0, max_speed)"
-type = 3
+type = SubResource("Resource_exs8f")
 
-[sub_resource type="Resource" id="Resource_5skqy"]
-resource_name = "max speed"
-script = ExtResource("2_kse3f")
-target_path = NodePath("")
-property_path = "max speed"
-type = 3
+[sub_resource type="Resource" id="Resource_0dsr1"]
+resource_name = "field: max speed"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_upke4")
+
+[sub_resource type="Resource" id="Resource_rkj0n"]
+resource_name = "float"
+script = ExtResource("3_4o61m")
+base = 3
+specialization = &""
 
 [sub_resource type="Resource" id="Resource_vwih0"]
 resource_name = "to arc fraction"
 script = ExtResource("3_lsf5q")
-inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_i1gce"), SubResource("Resource_5skqy")])
+inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_i1gce"), SubResource("Resource_0dsr1")])
 input_names = Array[StringName]([&"speed", &"max_speed"])
 expression = "0.75 * (speed / max_speed)"
-type = 3
+type = SubResource("Resource_rkj0n")
 
 [sub_resource type="Resource" id="Resource_drrce"]
 resource_name = "ring_gauge » arc_fraction"
@@ -73,19 +100,116 @@ target_path = NodePath("ring_gauge")
 property_path = "arc_fraction"
 source = SubResource("Resource_vwih0")
 
-[sub_resource type="Resource" id="Resource_p8mu4"]
-resource_name = "speed"
-script = ExtResource("4_6jyb4")
-type = 3
-object_type = &""
-default_value = 0.0
+[sub_resource type="Resource" id="Resource_hyyxr"]
+resource_name = "String"
+script = ExtResource("3_4o61m")
+base = 4
+specialization = &""
 
-[sub_resource type="Resource" id="Resource_fbf71"]
-resource_name = "max speed"
-script = ExtResource("4_6jyb4")
-type = 3
-object_type = &""
-default_value = 240.0
+[sub_resource type="Resource" id="Resource_cmovp"]
+resource_name = "speed units"
+script = ExtResource("2_jw5kw")
+type = SubResource("Resource_hyyxr")
+
+[sub_resource type="Resource" id="Resource_iu0f1"]
+resource_name = "field: speed units"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_cmovp")
+
+[sub_resource type="Resource" id="Resource_w74xj"]
+resource_name = "speed_units_label » text"
+script = ExtResource("1_w5mb8")
+target_path = NodePath("speed_units_label")
+property_path = "text"
+source = SubResource("Resource_iu0f1")
+
+[sub_resource type="Resource" id="Resource_u4uhn"]
+resource_name = "Gradient"
+script = ExtResource("3_4o61m")
+base = 24
+specialization = &"Gradient"
+
+[sub_resource type="Resource" id="Resource_ghwna"]
+resource_name = "warning_gradient"
+script = ExtResource("2_jw5kw")
+type = SubResource("Resource_u4uhn")
+
+[sub_resource type="Resource" id="Resource_wrr76"]
+resource_name = "field: warning_gradient"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_ghwna")
+
+[sub_resource type="Resource" id="Resource_flsxr"]
+resource_name = "field: speed"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_y036y")
+
+[sub_resource type="Resource" id="Resource_2mwk5"]
+resource_name = "float"
+script = ExtResource("3_4o61m")
+base = 3
+specialization = &""
+
+[sub_resource type="Resource" id="Resource_7juj7"]
+resource_name = "speed_limit"
+script = ExtResource("2_jw5kw")
+type = SubResource("Resource_2mwk5")
+
+[sub_resource type="Resource" id="Resource_qf78e"]
+resource_name = "field: speed_limit"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_7juj7")
+
+[sub_resource type="Resource" id="Resource_6wk5q"]
+resource_name = "float"
+script = ExtResource("3_4o61m")
+base = 3
+specialization = &""
+
+[sub_resource type="Resource" id="Resource_x8ejd"]
+resource_name = "warning_range"
+script = ExtResource("2_jw5kw")
+type = SubResource("Resource_6wk5q")
+
+[sub_resource type="Resource" id="Resource_2cl0a"]
+resource_name = "field: warning_range"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_x8ejd")
+
+[sub_resource type="Resource" id="Resource_hdtnh"]
+resource_name = "float"
+script = ExtResource("3_4o61m")
+base = 3
+specialization = &""
+
+[sub_resource type="Resource" id="Resource_ukusd"]
+resource_name = "map speed to gradient offset"
+script = ExtResource("3_lsf5q")
+inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_flsxr"), SubResource("Resource_qf78e"), SubResource("Resource_2cl0a")])
+input_names = Array[StringName]([&"speed", &"limit", &"range"])
+expression = "remap(speed, limit, limit + range, 0.0, 1.0)"
+type = SubResource("Resource_hdtnh")
+
+[sub_resource type="Resource" id="Resource_r0md5"]
+resource_name = "Color"
+script = ExtResource("3_4o61m")
+base = 20
+specialization = &""
+
+[sub_resource type="Resource" id="Resource_do22b"]
+resource_name = "sample gradient"
+script = ExtResource("3_lsf5q")
+inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_wrr76"), SubResource("Resource_ukusd")])
+input_names = Array[StringName]([&"gradient", &"offset"])
+expression = "gradient.sample(offset)"
+type = SubResource("Resource_r0md5")
+
+[sub_resource type="Resource" id="Resource_8jc20"]
+resource_name = "speed_label » modulate"
+script = ExtResource("1_w5mb8")
+target_path = NodePath("speed_label")
+property_path = "modulate"
+source = SubResource("Resource_do22b")
 
 [resource]
 script = ExtResource("5_yh2kb")
@@ -94,5 +218,5 @@ target_script = ExtResource("6_gwwsj")
 overwrite_target_script = true
 dry_run = false
 base_class = &"Node"
-properties = Array[ExtResource("4_6jyb4")]([SubResource("Resource_p8mu4"), SubResource("Resource_fbf71")])
-bindings = Array[ExtResource("1_w5mb8")]([SubResource("Resource_j3lh0"), SubResource("Resource_drrce")])
+properties = Array[ExtResource("2_jw5kw")]([SubResource("Resource_y036y"), SubResource("Resource_upke4"), SubResource("Resource_cmovp"), SubResource("Resource_7juj7"), SubResource("Resource_x8ejd"), SubResource("Resource_ghwna")])
+bindings = Array[ExtResource("1_w5mb8")]([SubResource("Resource_j3lh0"), SubResource("Resource_drrce"), SubResource("Resource_w74xj"), SubResource("Resource_8jc20")])

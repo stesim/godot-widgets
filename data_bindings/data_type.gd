@@ -1,5 +1,5 @@
 @tool
-class_name GdscriptType
+class_name DataType
 extends Resource
 
 
@@ -44,32 +44,27 @@ static var OBJECT := create(Base.OBJECT)
 static var ARRAY := create(Base.ARRAY)
 
 
-@export var base := Base.VARIANT
+@export var base := Base.VOID :
+	set(value):
+		base = value
+		_update_resource_name()
 
-@export var specialization : StringName
+@export var specialization : StringName :
+	set(value):
+		specialization = value
+		_update_resource_name()
 
 
 @warning_ignore("shadowed_variable")
-static func create(base_type : Base, specialization := &"") -> GdscriptType:
-	var type := GdscriptType.new()
+static func create(base_type : Base, specialization := &"") -> DataType:
+	var type := DataType.new()
 	type.base = base_type
 	type.specialization = specialization
 	return type
 
 
-func generate_code() -> String:
+func _update_resource_name() -> void:
 	match base:
-		Base.OBJECT:
-			return BASE_TYPE_STRINGS[Base.OBJECT] if specialization.is_empty() else specialization
-		Base.ARRAY:
-			var string := String(BASE_TYPE_STRINGS[Base.ARRAY])
-			return string if specialization.is_empty() else string + "[" + specialization + "]"
-		_:
-			return BASE_TYPE_STRINGS[base]
-
-
-func specialize(subtype : String) -> GdscriptType:
-	assert(specialization.is_empty())
-	var specialized := duplicate()
-	specialized.specialization = subtype
-	return specialized
+		Base.OBJECT: resource_name = specialization
+		Base.ARRAY: resource_name = "Array" if specialization.is_empty() else "Array[" + specialization + "]"
+		_: resource_name = BASE_TYPE_STRINGS[base]

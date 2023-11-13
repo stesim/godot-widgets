@@ -2,27 +2,39 @@
 extends Node
 
 
-@export var speed : float = 0.0 : set = _set_speed
+@export var speed : float : set = _set_speed
 
-@export var max_speed : float = 240.0 : set = _set_max_speed
+@export var max_speed : float : set = _set_max_speed
+
+@export var speed_units : String : set = _set_speed_units
+
+@export var speed_limit : float : set = _set_speed_limit
+
+@export var warning_range : float : set = _set_warning_range
+
+@export var warning_gradient : Gradient : set = _set_warning_gradient
 
 
 @onready var _speed_label := get_node(^"speed_label")
 
 @onready var _ring_gauge := get_node(^"ring_gauge")
 
+@onready var _speed_units_label := get_node(^"speed_units_label")
+
 
 func _ready():
 	_update_speed_label_text()
 	_update_ring_gauge_arc_fraction()
+	_update_speed_units_label_text()
+	_update_speed_label_modulate()
 
 
 func _update_speed_label_text() -> void:
-	var stringify_result : String = _stringify(speed)
-	_speed_label.text = stringify_result
+	var stringify_speed_result : String = _stringify_speed(speed)
+	_speed_label.text = stringify_speed_result
 
 
-func _stringify(speed : float) -> String:
+func _stringify_speed(speed : float) -> String:
 	return str(int(speed))
 
 
@@ -40,16 +52,59 @@ func _to_arc_fraction(speed : float, max_speed : float) -> float:
 	return 0.75 * (speed / max_speed)
 
 
+func _update_speed_units_label_text() -> void:
+	_speed_units_label.text = speed_units
+
+
+func _update_speed_label_modulate() -> void:
+	var map_speed_to_gradient_offset_result : float = _map_speed_to_gradient_offset(speed, speed_limit, warning_range)
+	var sample_gradient_result : Color = _sample_gradient(warning_gradient, map_speed_to_gradient_offset_result)
+	_speed_label.modulate = sample_gradient_result
+
+
+func _map_speed_to_gradient_offset(speed : float, limit : float, range : float) -> float:
+	return remap(speed, limit, limit + range, 0.0, 1.0)
+
+
+func _sample_gradient(gradient : Gradient, offset : float) -> Color:
+	return gradient.sample(offset)
+
+
 func _set_speed(value : float) -> void:
 	speed = value
 	if is_inside_tree():
 		_update_speed_label_text()
 		_update_ring_gauge_arc_fraction()
+		_update_speed_label_modulate()
 
 
 func _set_max_speed(value : float) -> void:
 	max_speed = value
 	if is_inside_tree():
 		_update_ring_gauge_arc_fraction()
+
+
+func _set_speed_units(value : String) -> void:
+	speed_units = value
+	if is_inside_tree():
+		_update_speed_units_label_text()
+
+
+func _set_warning_gradient(value : Gradient) -> void:
+	warning_gradient = value
+	if is_inside_tree():
+		_update_speed_label_modulate()
+
+
+func _set_speed_limit(value : float) -> void:
+	speed_limit = value
+	if is_inside_tree():
+		_update_speed_label_modulate()
+
+
+func _set_warning_range(value : float) -> void:
+	warning_range = value
+	if is_inside_tree():
+		_update_speed_label_modulate()
 
 
