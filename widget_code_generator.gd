@@ -7,6 +7,8 @@ static var GET_NODE_FUNCTION_REFERENCE := GdscriptReference.create(GdscriptFunct
 
 static var IS_INSIDE_TREE_FUNCTION_REFERENCE := GdscriptReference.create(GdscriptFunction.create_external(&"is_inside_tree"))
 
+static var CONNECT_SYMBOL := GdscriptSymbol.create_external_symbol(&"connect")
+
 
 var _definition : WidgetDefinition
 
@@ -34,8 +36,8 @@ func _generate_code() -> String:
 	if not _definition.base_class.is_empty():
 		_generator.base_class = _generator.get_object_type(_definition.base_class)
 
-	_generate_properties()
 	_generate_ready_function()
+	_generate_properties()
 	_generate_binding_update_functions()
 	_generate_binding_reactivity()
 
@@ -103,6 +105,8 @@ func _generate_binding_update_functions() -> void:
 			)
 		)
 
+		_generate_explicit_binding_triggers(binding, function)
+
 
 func _generate_data_source_code(context : BindingGenerationContext, data_source : DataSource) -> GdscriptExpression:
 	if data_source in context.source_outputs:
@@ -113,7 +117,7 @@ func _generate_data_source_code(context : BindingGenerationContext, data_source 
 	var output : GdscriptExpression
 	if data_source is DataFieldSource:
 		output = _generate_data_field_source_code(data_source)
-		if output != null:
+		if not context.binding.ignore_implicit_triggers and output != null:
 			_add_binding_dependency(context, data_source)
 	if data_source is DataPropertySource:
 		output = _generate_data_property_source_code(context, data_source, data_type)
@@ -195,6 +199,41 @@ func _generate_data_transform_expression_code(context : BindingGenerationContext
 	context.function.body.push_back(variable_declaration)
 	var variable_reference := GdscriptReference.create(variable_declaration)
 	return variable_reference
+
+
+func _generate_explicit_binding_triggers(binding : DataBinding, function : GdscriptFunction) -> void:
+	if binding.explicit_triggers.is_empty():
+		return
+
+	var function_reference := GdscriptReference.create(function)
+	for trigger in binding.explicit_triggers:
+		if trigger is SignalReactivityTrigger:
+			_generate_signal_binding_trigger(trigger, function_reference)
+		else:
+			push_error("unknown reactivity trigger for binding: " + binding.name)
+
+
+func _generate_signal_binding_trigger(trigger : SignalReactivityTrigger, function : GdscriptReference, ) -> void:
+	var signal_path := NodePath(trigger.signal_path).get_as_property_path()
+	if signal_path.get_subname_count() == 0:
+		push_error("reactivity trigger signal path is empty")
+		return
+
+	var node_property := _get_node_property(trigger.node_path, null)
+	var signal_reference := _create_reference_from_property_path(
+		signal_path,
+		GdscriptReference.create(node_property) if node_property != null else null,
+	)
+	var connect_reference := GdscriptReference.create(CONNECT_SYMBOL, signal_reference)
+
+	var connect_call := GdscriptExpressionStatement.create(
+		GdscriptFunctionCall.create(
+			connect_reference,
+			[function],
+		)
+	)
+
+	_ready_function.body.push_back(connect_call)
 
 
 func _add_binding_dependency(context : BindingGenerationContext, property_source : DataFieldSource) -> void:

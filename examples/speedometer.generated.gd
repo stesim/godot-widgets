@@ -12,7 +12,7 @@ extends Node
 
 @export var warning_range : float = 10.0 : set = _set_warning_range
 
-@export var warning_gradient : Gradient : set = _set_warning_gradient
+@export var warning_gradient : Gradient = null : set = _set_warning_gradient
 
 
 @onready var _speed_label := get_node(^"speed_label")
@@ -27,6 +27,7 @@ func _ready():
 	_update_ring_gauge_arc_fraction()
 	_update_speed_units_label_text()
 	_update_speed_label_modulate()
+	warning_gradient.changed.connect(_update_speed_label_modulate)
 
 
 func _update_speed_label_text() -> void:

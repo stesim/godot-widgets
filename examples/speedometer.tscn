@@ -15,7 +15,7 @@ colors = PackedColorArray(0.0874, 0.127803, 0.23, 1, 0.1216, 0.177813, 0.32, 1, 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_2b634"]
 gradient = SubResource("Gradient_h4ld2")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_frpkm"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1pxf6"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("5_ado6q")
@@ -39,7 +39,7 @@ fill = 1
 fill_from = Vector2(1, 0.5)
 fill_to = Vector2(0, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_athox"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jo0fv"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("5_ado6q")
@@ -52,7 +52,7 @@ shader_parameter/clamp_angle = false
 shader_parameter/anti_alias_size = 0.005
 shader_parameter/fill_texture = SubResource("GradientTexture2D_lfrt5")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_iramh"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4mk8q"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("5_ado6q")
@@ -72,7 +72,7 @@ warning_gradient = SubResource("Gradient_ur5bu")
 [node name="background_circle" parent="." instance=ExtResource("4_bgyyu")]
 transform = Transform3D(1.08, 0, 0, 0, 1.08, 0, 0, 0, 1, 0, 0, 0)
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_frpkm")
+surface_material_override/0 = SubResource("ShaderMaterial_1pxf6")
 size = Vector2(1.08, 1.08)
 fill_texture = SubResource("GradientTexture1D_2b634")
 sampling_mode = 1
@@ -80,8 +80,7 @@ sampling_mode = 1
 [node name="ring_gauge_hint" parent="." instance=ExtResource("4_bgyyu")]
 transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0.1)
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_athox")
-size = Vector2(1, 1)
+surface_material_override/0 = SubResource("ShaderMaterial_jo0fv")
 fill_fraction = 0.3
 arc_fraction = 0.75
 fill_color = Color(1, 1, 1, 0.0627451)
@@ -92,8 +91,7 @@ clamp_angle = false
 [node name="ring_gauge" parent="." instance=ExtResource("4_bgyyu")]
 transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0.2)
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_iramh")
-size = Vector2(1, 1)
+surface_material_override/0 = SubResource("ShaderMaterial_4mk8q")
 fill_fraction = 0.3
 arc_fraction = 0.0
 fill_texture = SubResource("GradientTexture2D_lfrt5")

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="WidgetDefinition" load_steps=42 format=3 uid="uid://cbhju4wym5dc7"]
+[gd_resource type="Resource" script_class="WidgetDefinition" load_steps=44 format=3 uid="uid://cbhju4wym5dc7"]
 
 [ext_resource type="Script" path="res://data_bindings/data_binding.gd" id="1_w5mb8"]
 [ext_resource type="Script" path="res://data_bindings/data_field.gd" id="2_jw5kw"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://data_bindings/data_transform_expression.gd" id="3_lsf5q"]
 [ext_resource type="Script" path="res://data_bindings/data_field_source.gd" id="4_nuqdj"]
 [ext_resource type="Script" path="res://widget_definition.gd" id="5_yh2kb"]
+[ext_resource type="Script" path="res://data_bindings/signal_reactivity_trigger.gd" id="6_3jmug"]
 [ext_resource type="Script" path="res://examples/speedometer.generated.gd" id="6_gwwsj"]
 [ext_resource type="Script" path="res://data_bindings/object_data_type.gd" id="7_ly0gt"]
 
@@ -44,6 +45,8 @@ script = ExtResource("1_w5mb8")
 target_path = NodePath("speed_label")
 property_path = "text"
 source = SubResource("Resource_n8gu3")
+ignore_implicit_triggers = false
+explicit_triggers = Array[Resource("res://data_bindings/data_reactivity_trigger.gd")]([])
 
 [sub_resource type="Resource" id="Resource_a602k"]
 resource_name = "field: speed"
@@ -93,6 +96,8 @@ script = ExtResource("1_w5mb8")
 target_path = NodePath("ring_gauge")
 property_path = "arc_fraction"
 source = SubResource("Resource_vwih0")
+ignore_implicit_triggers = false
+explicit_triggers = Array[Resource("res://data_bindings/data_reactivity_trigger.gd")]([])
 
 [sub_resource type="Resource" id="Resource_qprwu"]
 resource_name = "String"
@@ -116,6 +121,14 @@ script = ExtResource("1_w5mb8")
 target_path = NodePath("speed_units_label")
 property_path = "text"
 source = SubResource("Resource_iu0f1")
+ignore_implicit_triggers = false
+explicit_triggers = Array[Resource("res://data_bindings/data_reactivity_trigger.gd")]([])
+
+[sub_resource type="Resource" id="Resource_8i48t"]
+resource_name = "warning_gradient:changed"
+script = ExtResource("6_3jmug")
+node_path = NodePath("")
+signal_path = "warning_gradient:changed"
 
 [sub_resource type="Gradient" id="Gradient_ur5bu"]
 offsets = PackedFloat32Array(0, 0.527495, 1)
@@ -201,13 +214,15 @@ script = ExtResource("1_w5mb8")
 target_path = NodePath("speed_label")
 property_path = "modulate"
 source = SubResource("Resource_do22b")
+ignore_implicit_triggers = false
+explicit_triggers = Array[Resource("res://data_bindings/data_reactivity_trigger.gd")]([SubResource("Resource_8i48t")])
 
 [resource]
 script = ExtResource("5_yh2kb")
 update_script = false
 target_script = ExtResource("6_gwwsj")
 overwrite_target_script = true
-dry_run = true
+dry_run = false
 base_class = &"Node"
 properties = Array[ExtResource("2_jw5kw")]([SubResource("Resource_y036y"), SubResource("Resource_upke4"), SubResource("Resource_cmovp"), SubResource("Resource_7juj7"), SubResource("Resource_x8ejd"), SubResource("Resource_ghwna")])
 bindings = Array[ExtResource("1_w5mb8")]([SubResource("Resource_j3lh0"), SubResource("Resource_drrce"), SubResource("Resource_w74xj"), SubResource("Resource_8jc20")])

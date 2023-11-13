@@ -16,5 +16,12 @@ extends Resource
 @export var source : DataSource
 
 
+@export_group("Reactivity")
+
+@export var ignore_implicit_triggers := false
+
+@export var explicit_triggers : Array[DataReactivityTrigger] = []
+
+
 func _update_resource_name() -> void:
 	resource_name = String(target_path) + " » " + property_path if not target_path.is_empty() else property_path
