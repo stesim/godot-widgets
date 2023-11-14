@@ -9,6 +9,13 @@ static var IS_INSIDE_TREE_FUNCTION_REFERENCE := GdscriptReference.create(Gdscrip
 
 static var CONNECT_SYMBOL := GdscriptSymbol.create_external_symbol(&"connect")
 
+static var REPLACE_CHILDREN_FUNCTION_REFERENCE := GdscriptReference.create(
+	GdscriptSymbol.create_external_symbol(&"replace_children"),
+	GdscriptReference.create(GdscriptSymbol.create_external_symbol(&"WidgetHelpers")),
+)
+
+static var SELF_REFERENCE := GdscriptReference.create(GdscriptSymbol.create_external_symbol(&"self"))
+
 
 var _definition : WidgetDefinition
 
@@ -69,21 +76,27 @@ class BindingGenerationContext extends RefCounted:
 func _generate_binding_update_functions() -> void:
 	var context := BindingGenerationContext.new()
 	for binding in _definition.bindings:
+		var is_slot_binding := binding is SlotBinding
+
 		var property_path := NodePath(binding.property_path).get_as_property_path()
 		var is_valid := (
 			binding.source != null
-			and property_path.get_subname_count() > 0
+			and (property_path.get_subname_count() > 0 or is_slot_binding)
 		)
 		if not is_valid:
+			push_error("invalid data binding")
 			continue
 
 		context.binding = binding
 
 		var node_property := _get_node_property(binding.target_path, null)
+		var node_property_name := String(node_property.name) if node_property != null else ""
+		var node_property_reference := GdscriptReference.create(node_property) if node_property != null else null
 		var function_name := _generator.to_unique_symbol_name(
 			"_update"
-			+ (node_property.name if node_property != null else &"")
-			+ "_" + binding.property_path
+			+ node_property_name
+			+ ("_" + binding.property_path if property_path.get_subname_count() > 0 else "")
+			+ ("_children" if is_slot_binding else "")
 		)
 		var function := GdscriptFunction.create(function_name, [], GdscriptType.VOID)
 		_generator.add_function(function)
@@ -91,12 +104,21 @@ func _generate_binding_update_functions() -> void:
 		context.function = function
 
 		var output := _generate_data_source_code(context, binding.source)
-		var property_reference := _create_reference_from_property_path(
-			property_path,
-			GdscriptReference.create(node_property) if node_property != null else null,
-		)
-		var assignment := GdscriptAssignment.create(property_reference, output)
-		function.body.push_back(assignment)
+
+		if is_slot_binding:
+			var parent_reference := (
+				_create_reference_from_property_path(property_path, node_property_reference) if property_path.get_subname_count() > 0
+				else node_property_reference if node_property_reference != null
+				else SELF_REFERENCE
+			)
+			var replace_children_call := GdscriptExpressionStatement.create(
+				GdscriptFunctionCall.create(REPLACE_CHILDREN_FUNCTION_REFERENCE, [parent_reference, output])
+			)
+			function.body.push_back(replace_children_call)
+		else:
+			var property_reference := _create_reference_from_property_path(property_path, node_property_reference)
+			var assignment := GdscriptAssignment.create(property_reference, output)
+			function.body.push_back(assignment)
 
 		# call on ready to set initial values
 		_ready_function.body.push_back(
@@ -319,7 +341,8 @@ func _to_gdscript_type(type : DataType) -> GdscriptType:
 		# NOTE: GDscript does not currently support nested typed arrays, so the
 		#       inner array is declared as a generic array
 		var element_type_string : StringName = (
-			&"Array" if type.element_type is ArrayDataType
+			&"" if type.element_type == null
+			else &"Array" if type.element_type is ArrayDataType
 			else type.element_type.to_string_name()
 		)
 		return GdscriptType.create(GdscriptType.Base.ARRAY, element_type_string)

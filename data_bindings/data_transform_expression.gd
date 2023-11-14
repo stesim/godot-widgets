@@ -7,7 +7,7 @@ extends DataSource
 
 @export var input_names : Array[StringName] = []
 
-@export var expression : String
+@export_multiline var expression : String
 
 @export var type : DataType
 

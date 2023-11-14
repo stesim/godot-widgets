@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="WidgetDefinition" load_steps=44 format=3 uid="uid://cbhju4wym5dc7"]
+[gd_resource type="Resource" script_class="WidgetDefinition" load_steps=59 format=3 uid="uid://cbhju4wym5dc7"]
 
 [ext_resource type="Script" path="res://data_bindings/data_binding.gd" id="1_w5mb8"]
 [ext_resource type="Script" path="res://data_bindings/data_field.gd" id="2_jw5kw"]
@@ -9,6 +9,9 @@
 [ext_resource type="Script" path="res://data_bindings/signal_reactivity_trigger.gd" id="6_3jmug"]
 [ext_resource type="Script" path="res://examples/speedometer.generated.gd" id="6_gwwsj"]
 [ext_resource type="Script" path="res://data_bindings/object_data_type.gd" id="7_ly0gt"]
+[ext_resource type="Script" path="res://data_bindings/slot_binding.gd" id="8_t31v4"]
+[ext_resource type="Script" path="res://data_bindings/array_data_type.gd" id="9_1o0jg"]
+[ext_resource type="Script" path="res://data_bindings/data_property_source.gd" id="9_7x46r"]
 
 [sub_resource type="Resource" id="Resource_gmgfy"]
 resource_name = "float"
@@ -217,6 +220,76 @@ source = SubResource("Resource_do22b")
 ignore_implicit_triggers = false
 explicit_triggers = Array[Resource("res://data_bindings/data_reactivity_trigger.gd")]([SubResource("Resource_8i48t")])
 
+[sub_resource type="Resource" id="Resource_odcro"]
+resource_name = "float"
+script = ExtResource("3_hpyi3")
+primitive_type = 3
+
+[sub_resource type="Resource" id="Resource_hwc77"]
+resource_name = "tick interval"
+script = ExtResource("2_jw5kw")
+type = SubResource("Resource_odcro")
+default_value = 20.0
+
+[sub_resource type="Resource" id="Resource_l86cr"]
+resource_name = "field: tick interval"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_hwc77")
+
+[sub_resource type="Resource" id="Resource_0623w"]
+resource_name = "field: max speed"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_upke4")
+
+[sub_resource type="Resource" id="Resource_sip2o"]
+resource_name = "float"
+script = ExtResource("3_hpyi3")
+primitive_type = 3
+
+[sub_resource type="Resource" id="Resource_7f5kk"]
+resource_name = "tick radius"
+script = ExtResource("2_jw5kw")
+type = SubResource("Resource_sip2o")
+default_value = 0.55
+
+[sub_resource type="Resource" id="Resource_xcq2d"]
+resource_name = "field: tick radius"
+script = ExtResource("4_nuqdj")
+field = SubResource("Resource_7f5kk")
+
+[sub_resource type="Resource" id="Resource_l1wn5"]
+resource_name = "float"
+script = ExtResource("3_hpyi3")
+primitive_type = 3
+
+[sub_resource type="Resource" id="Resource_q6qa7"]
+resource_name = "ring_gauge_hint » arc_fraction"
+script = ExtResource("9_7x46r")
+target_path = NodePath("ring_gauge_hint")
+property_path = "arc_fraction"
+type = SubResource("Resource_l1wn5")
+
+[sub_resource type="Resource" id="Resource_u5hp1"]
+resource_name = "Array"
+script = ExtResource("9_1o0jg")
+
+[sub_resource type="Resource" id="Resource_3xl8i"]
+resource_name = "create ticks"
+script = ExtResource("3_lsf5q")
+inputs = Array[Resource("res://data_bindings/data_source.gd")]([SubResource("Resource_l86cr"), SubResource("Resource_0623w"), SubResource("Resource_xcq2d"), SubResource("Resource_q6qa7")])
+input_names = Array[StringName]([&"interval", &"max_speed", &"radius", &"arc_fraction"])
+expression = "range(floori(max_speed / interval) + 1).map(func(i : int): var label := Label3D.new(); label.text = str(int(i * interval)); var angle :=  (0.5 * (1.0 - arc_fraction) + i * interval / max_speed * arc_fraction) * TAU; label.position = radius * Vector3.DOWN.rotated(Vector3.FORWARD, angle); label.font_size = 16.0; label.outline_size = 6.0; return label)"
+type = SubResource("Resource_u5hp1")
+
+[sub_resource type="Resource" id="Resource_slmvl"]
+resource_name = "ticks » [children]"
+script = ExtResource("8_t31v4")
+target_path = NodePath("ticks")
+property_path = ""
+source = SubResource("Resource_3xl8i")
+ignore_implicit_triggers = false
+explicit_triggers = Array[Resource("res://data_bindings/data_reactivity_trigger.gd")]([])
+
 [resource]
 script = ExtResource("5_yh2kb")
 update_script = false
@@ -224,5 +297,5 @@ target_script = ExtResource("6_gwwsj")
 overwrite_target_script = true
 dry_run = false
 base_class = &"Node"
-properties = Array[ExtResource("2_jw5kw")]([SubResource("Resource_y036y"), SubResource("Resource_upke4"), SubResource("Resource_cmovp"), SubResource("Resource_7juj7"), SubResource("Resource_x8ejd"), SubResource("Resource_ghwna")])
-bindings = Array[ExtResource("1_w5mb8")]([SubResource("Resource_j3lh0"), SubResource("Resource_drrce"), SubResource("Resource_w74xj"), SubResource("Resource_8jc20")])
+properties = Array[ExtResource("2_jw5kw")]([SubResource("Resource_y036y"), SubResource("Resource_upke4"), SubResource("Resource_cmovp"), SubResource("Resource_7juj7"), SubResource("Resource_x8ejd"), SubResource("Resource_ghwna"), SubResource("Resource_hwc77"), SubResource("Resource_7f5kk")])
+bindings = Array[ExtResource("1_w5mb8")]([SubResource("Resource_j3lh0"), SubResource("Resource_drrce"), SubResource("Resource_w74xj"), SubResource("Resource_8jc20"), SubResource("Resource_slmvl")])
