@@ -5,7 +5,7 @@ extends Resource
 
 static var GET_NODE_FUNCTION_REFERENCE := GdscriptReference.create(GdscriptFunction.create_external(&"get_node"))
 
-static var IS_INSIDE_TREE_FUNCTION_REFERENCE := GdscriptReference.create(GdscriptFunction.create_external(&"is_inside_tree"))
+static var IS_NODE_READY_FUNCTION_REFERENCE := GdscriptReference.create(GdscriptFunction.create_external(&"is_node_ready"))
 
 static var CONNECT_SYMBOL := GdscriptSymbol.create_external_symbol(&"connect")
 
@@ -275,11 +275,11 @@ func _generate_binding_reactivity() -> void:
 			_create_default_setter(property)
 			setter = property.setter
 
-		var is_inside_tree_branch := GdscriptBranch.create(
-			GdscriptFunctionCall.create(IS_INSIDE_TREE_FUNCTION_REFERENCE),
+		var if_is_ready_branch := GdscriptBranch.create(
+			GdscriptFunctionCall.create(IS_NODE_READY_FUNCTION_REFERENCE),
 			[],
 		)
-		setter.body.push_back(is_inside_tree_branch)
+		setter.body.push_back(if_is_ready_branch)
 
 		var property_dependents : Dictionary = _binding_dependencies[property]
 		for binding in property_dependents:
@@ -287,7 +287,7 @@ func _generate_binding_reactivity() -> void:
 			var function_call := GdscriptExpressionStatement.create(
 				GdscriptFunctionCall.create(GdscriptReference.create(function))
 			)
-			is_inside_tree_branch.then_statements.push_back(function_call)
+			if_is_ready_branch.then_statements.push_back(function_call)
 
 
 func _create_default_setter(property : GdscriptProperty) -> void:

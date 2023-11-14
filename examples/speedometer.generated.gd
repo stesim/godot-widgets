@@ -91,7 +91,7 @@ func _create_ticks(interval : float, max_speed : float, radius : float, arc_frac
 
 func _set_speed(value : float) -> void:
 	speed = value
-	if is_inside_tree():
+	if is_node_ready():
 		_update_speed_label_text()
 		_update_ring_gauge_arc_fraction()
 		_update_speed_label_modulate()
@@ -99,44 +99,44 @@ func _set_speed(value : float) -> void:
 
 func _set_max_speed(value : float) -> void:
 	max_speed = value
-	if is_inside_tree():
+	if is_node_ready():
 		_update_ring_gauge_arc_fraction()
 		_update_ticks_children()
 
 
 func _set_speed_units(value : String) -> void:
 	speed_units = value
-	if is_inside_tree():
+	if is_node_ready():
 		_update_speed_units_label_text()
 
 
 func _set_warning_gradient(value : Gradient) -> void:
 	warning_gradient = value
-	if is_inside_tree():
+	if is_node_ready():
 		_update_speed_label_modulate()
 
 
 func _set_speed_limit(value : float) -> void:
 	speed_limit = value
-	if is_inside_tree():
+	if is_node_ready():
 		_update_speed_label_modulate()
 
 
 func _set_warning_range(value : float) -> void:
 	warning_range = value
-	if is_inside_tree():
+	if is_node_ready():
 		_update_speed_label_modulate()
 
 
 func _set_tick_interval(value : float) -> void:
 	tick_interval = value
-	if is_inside_tree():
+	if is_node_ready():
 		_update_ticks_children()
 
 
 func _set_tick_radius(value : float) -> void:
 	tick_radius = value
-	if is_inside_tree():
+	if is_node_ready():
 		_update_ticks_children()
 
 
