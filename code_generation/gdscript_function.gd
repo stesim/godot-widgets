@@ -7,13 +7,13 @@ extends GdscriptSymbol
 
 @export var return_type : GdscriptType = null
 
-@export var body : Array[GdscriptStatement] = []
+@export var body : GdscriptBlock = null
 
 @export var is_external := false
 
 
 @warning_ignore("shadowed_variable")
-static func create(name : StringName, parameters : Array[GdscriptParameter] = [], return_type : GdscriptType = null, body : Array[GdscriptStatement] = []) -> GdscriptFunction:
+static func create(name : StringName, parameters : Array[GdscriptParameter] = [], return_type : GdscriptType = null, body : GdscriptBlock = null) -> GdscriptFunction:
 	var function := GdscriptFunction.new()
 	function.name = name
 	function.parameters = parameters
@@ -41,9 +41,8 @@ func generate_code() -> String:
 	if return_type != null:
 		code += " -> " + return_type.generate_code()
 	code += ":\n"
-	if body.is_empty():
-		code += "\tpass\n"
+	if body != null:
+		code += body.generate_code().indent("\t")
 	else:
-		for statement in body:
-			code += statement.generate_code().indent("\t")
+		code += "\tpass\n"
 	return code

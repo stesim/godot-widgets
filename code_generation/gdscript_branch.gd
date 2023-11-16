@@ -5,42 +5,35 @@ extends GdscriptStatement
 
 @export var condition : GdscriptExpression
 
-@export var then_statements : Array[GdscriptStatement] = []
+@export var then_block : GdscriptBlock
 
 @export var elif_branches : Array[GdscriptBranch] = []
 
-@export var else_statements : Array[GdscriptStatement] = []
+@export var else_block : GdscriptBlock = null
 
 
 @warning_ignore("shadowed_variable")
-static func create(condition : GdscriptExpression, then_statements : Array[GdscriptStatement], else_statements : Array[GdscriptStatement] = [], elif_branches : Array[GdscriptBranch] = []) -> GdscriptBranch:
+static func create(condition : GdscriptExpression, then_block : GdscriptBlock, else_block : GdscriptBlock = null, elif_branches : Array[GdscriptBranch] = []) -> GdscriptBranch:
 	var statement := GdscriptBranch.new()
 	statement.condition = condition
-	statement.then_statements = then_statements
+	statement.then_block = then_block
 	statement.elif_branches = elif_branches
-	statement.else_statements = else_statements
+	statement.else_block = else_block
 	return statement
 
 
 func generate_code() -> String:
 	var code := "if " + condition.generate_code() + ":\n"
-	code += _stringify_block(then_statements)
+	code += then_block.generate_code().indent("\t") if then_block != null else "\tpass\n"
 
 	for branch in elif_branches:
 		assert(branch.elif_branches.is_empty())
-		assert(branch.else_statements.is_empty())
+		assert(branch.else_block.statements.is_empty())
 		code += "elif " + branch.condition.generate_code() + ":\n"
-		code += _stringify_block(branch.then_statements)
+		code += branch.then_block.generate_code().indent("\t") if branch.then_block != null else "\tpass\n"
 
-	if not else_statements.is_empty():
+	if else_block != null and not else_block.statements.is_empty():
 		code += "else:\n"
-		code += _stringify_block(else_statements)
+		code += else_block.generate_code().indent("\t")
 
 	return code
-
-
-func _stringify_block(statements : Array[GdscriptStatement]) -> String:
-	var code := ""
-	for statement in statements:
-		code += statement.generate_code()
-	return code.indent("\t")

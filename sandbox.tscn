@@ -8,7 +8,7 @@
 [ext_resource type="Shader" path="res://primitives/circle_shader.gdshader" id="6_wevh8"]
 [ext_resource type="PackedScene" uid="uid://c3qehxqhy5tr" path="res://examples/speedometer.tscn" id="8_c6jx4"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_yvq1y"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mkf7i"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("3_i4vvm")
@@ -64,7 +64,7 @@ colors = PackedColorArray(0.0874, 0.127803, 0.23, 1, 0.1216, 0.177813, 0.32, 1, 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_akv1m"]
 gradient = SubResource("Gradient_h4ld2")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dhnhx"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f0skk"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("6_wevh8")
@@ -88,7 +88,7 @@ fill = 1
 fill_from = Vector2(1, 0.5)
 fill_to = Vector2(0, 0.5)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cp5lm"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ncys2"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("6_wevh8")
@@ -101,7 +101,7 @@ shader_parameter/clamp_angle = false
 shader_parameter/anti_alias_size = 0.005
 shader_parameter/fill_texture = SubResource("GradientTexture2D_edjx1")
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_oqhsc"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lpb4w"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("6_wevh8")
@@ -119,7 +119,7 @@ script = ExtResource("1_38tfc")
 
 [node name="background" parent="." instance=ExtResource("2_nsmog")]
 transform = Transform3D(8, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, -1)
-surface_material_override/0 = SubResource("ShaderMaterial_yvq1y")
+surface_material_override/0 = SubResource("ShaderMaterial_mkf7i")
 size = Vector2(8, 4)
 fill_color = Color(0.0823529, 0.0823529, 0.121569, 1)
 
@@ -144,7 +144,7 @@ warning_gradient = SubResource("Gradient_s0brb")
 [node name="background_circle" parent="speedometer2" instance=ExtResource("5_wcrad")]
 transform = Transform3D(1.08, 0, 0, 0, 1.08, 0, 0, 0, 1, 0, 0, 0)
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_dhnhx")
+surface_material_override/0 = SubResource("ShaderMaterial_f0skk")
 size = Vector2(1.08, 1.08)
 fill_texture = SubResource("GradientTexture1D_akv1m")
 sampling_mode = 1
@@ -152,8 +152,7 @@ sampling_mode = 1
 [node name="ring_gauge_hint" parent="speedometer2" instance=ExtResource("5_wcrad")]
 transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0.1)
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_cp5lm")
-size = Vector2(1, 1)
+surface_material_override/0 = SubResource("ShaderMaterial_ncys2")
 fill_fraction = 0.3
 arc_fraction = 0.75
 fill_color = Color(1, 1, 1, 0.0627451)
@@ -164,8 +163,7 @@ clamp_angle = false
 [node name="ring_gauge" parent="speedometer2" instance=ExtResource("5_wcrad")]
 transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 0, 0, 0.2)
 skeleton = NodePath("../..")
-surface_material_override/0 = SubResource("ShaderMaterial_oqhsc")
-size = Vector2(1, 1)
+surface_material_override/0 = SubResource("ShaderMaterial_lpb4w")
 fill_fraction = 0.3
 arc_fraction = 0.0
 fill_texture = SubResource("GradientTexture2D_edjx1")

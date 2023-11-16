@@ -18,7 +18,11 @@ extends Resource
 
 @export var dry_run := true
 
+@export var global_name := &""
+
 @export var base_class := &"Node"
+
+@export var is_tool := false
 
 @export var properties : Array[DataField] = []
 
