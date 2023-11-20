@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://cod7jgyguvge1"]
+
+[ext_resource type="Script" path="res://visual_editor/expressions/field_reference.gd" id="1_ifmd4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u8ece"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0.215686, 0.419608, 0.152941, 1)
+
+[node name="field_reference" type="Label"]
+custom_minimum_size = Vector2(32, 32)
+offset_right = 1.0
+offset_bottom = 23.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_u8ece")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("1_ifmd4")

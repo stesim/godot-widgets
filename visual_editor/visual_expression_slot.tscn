@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://clx2gkowc53c8"]
+
+[ext_resource type="Script" path="res://visual_editor/visual_expression_slot.gd" id="1_tf47i"]
+[ext_resource type="PackedScene" uid="uid://bpcugr11gfx6j" path="res://visual_editor/visual_expression_placeholder.tscn" id="2_funeu"]
+[ext_resource type="PackedScene" uid="uid://cod7jgyguvge1" path="res://visual_editor/expressions/field_reference.tscn" id="3_4qkur"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iem7j"]
+bg_color = Color(0, 0, 0, 0.25098)
+
+[node name="visual_expression_slot" type="PanelContainer"]
+custom_minimum_size = Vector2(32, 32)
+offset_right = 32.0
+offset_bottom = 32.0
+focus_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_iem7j")
+script = ExtResource("1_tf47i")
+placeholder_scene = ExtResource("2_funeu")
+field_scene = ExtResource("3_4qkur")

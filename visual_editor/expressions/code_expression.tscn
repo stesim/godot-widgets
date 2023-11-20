@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://btlpcq1w7kcwh"]
+
+[ext_resource type="Script" path="res://visual_editor/expressions/code_expression.gd" id="1_l8tis"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lf245"]
+
+[node name="code_expression" type="VBoxContainer"]
+custom_minimum_size = Vector2(256, 32)
+script = ExtResource("1_l8tis")
+
+[node name="evaluation" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="signature" type="HBoxContainer" parent="evaluation"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="detail_toggle" type="Button" parent="evaluation"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_lf245")
+text = "✎"
+
+[node name="implementation" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="signature" type="LineEdit" parent="implementation"]
+layout_mode = 2
+placeholder_text = "signature"
+alignment = 1
+
+[node name="body" type="TextEdit" parent="implementation"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+placeholder_text = "implementation"

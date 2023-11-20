@@ -1,0 +1,85 @@
+[gd_scene load_steps=12 format=3 uid="uid://di8shlbm1rt16"]
+
+[ext_resource type="PackedScene" uid="uid://m7np61paa2dg" path="res://visual_editor/widget_editor_canvas.tscn" id="1_5rm5w"]
+[ext_resource type="PackedScene" uid="uid://clx2gkowc53c8" path="res://visual_editor/visual_expression_slot.tscn" id="2_l8p6v"]
+[ext_resource type="Script" path="res://data_bindings/data_field.gd" id="6_4yase"]
+[ext_resource type="Script" path="res://data_bindings/primitive_data_type.gd" id="7_wbtyl"]
+[ext_resource type="Script" path="res://data_bindings/data_field_source.gd" id="8_c1h7l"]
+
+[sub_resource type="Resource" id="Resource_bplk4"]
+resource_name = "float"
+script = ExtResource("7_wbtyl")
+primitive_type = 3
+
+[sub_resource type="Resource" id="Resource_hrb4a"]
+resource_name = "speed"
+script = ExtResource("6_4yase")
+type = SubResource("Resource_bplk4")
+default_value = 0.0
+
+[sub_resource type="Resource" id="Resource_la4ui"]
+resource_name = "field: speed"
+script = ExtResource("8_c1h7l")
+field = SubResource("Resource_hrb4a")
+
+[sub_resource type="Resource" id="Resource_l331k"]
+resource_name = "float"
+script = ExtResource("7_wbtyl")
+primitive_type = 3
+
+[sub_resource type="Resource" id="Resource_c5032"]
+resource_name = "max speed"
+script = ExtResource("6_4yase")
+type = SubResource("Resource_l331k")
+default_value = 0.0
+
+[sub_resource type="Resource" id="Resource_iicsd"]
+resource_name = "field: max speed"
+script = ExtResource("8_c1h7l")
+field = SubResource("Resource_c5032")
+
+[node name="editor_sandbox" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="canvas" parent="." instance=ExtResource("1_5rm5w")]
+layout_mode = 1
+
+[node name="visual_expression_slot" parent="canvas" instance=ExtResource("2_l8p6v")]
+layout_mode = 1
+offset_left = 712.0
+offset_top = 472.0
+offset_right = 744.0
+offset_bottom = 504.0
+
+[node name="visual_expression_slot2" parent="canvas" instance=ExtResource("2_l8p6v")]
+layout_mode = 1
+offset_left = 584.0
+offset_top = 432.0
+offset_right = 616.0
+offset_bottom = 464.0
+
+[node name="fields" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 16.0
+offset_top = -44.0
+offset_right = 48.0
+offset_bottom = 24.0
+grow_vertical = 2
+
+[node name="speed_field_slot" parent="fields" instance=ExtResource("2_l8p6v")]
+layout_mode = 2
+remove_on_drag = false
+data_source = SubResource("Resource_la4ui")
+
+[node name="max_speed_field_slot" parent="fields" instance=ExtResource("2_l8p6v")]
+layout_mode = 2
+remove_on_drag = false
+data_source = SubResource("Resource_iicsd")

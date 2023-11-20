@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://vogjsly5xskd"]
+
+[ext_resource type="Script" path="res://visual_editor/visual_expression_sentence.gd" id="1_wh54r"]
+[ext_resource type="PackedScene" uid="uid://clx2gkowc53c8" path="res://visual_editor/visual_expression_slot.tscn" id="2_20cp5"]
+
+[node name="add" type="HBoxContainer"]
+script = ExtResource("1_wh54r")
+
+[node name="lhs_slot" parent="." instance=ExtResource("2_20cp5")]
+layout_mode = 2
+
+[node name="plus_label" type="Label" parent="."]
+layout_mode = 2
+text = "+"
+
+[node name="rhs_slot" parent="." instance=ExtResource("2_20cp5")]
+layout_mode = 2

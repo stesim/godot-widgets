@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://bpcugr11gfx6j"]
+
+[ext_resource type="Script" path="res://visual_editor/visual_expression_placeholder.gd" id="1_8miln"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_myb0y"]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.25098)
+anti_aliasing = false
+
+[node name="visual_expression_placeholder" type="Label"]
+custom_minimum_size = Vector2(32, 32)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_myb0y")
+text = "?"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("1_8miln")

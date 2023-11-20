@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://m7np61paa2dg"]
+
+[ext_resource type="Script" path="res://visual_editor/widget_editor_canvas.gd" id="1_ecgus"]
+
+[node name="widget_editor_canvas" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ecgus")

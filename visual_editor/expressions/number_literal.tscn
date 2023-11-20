@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://blrofkoh6gcrq"]
+
+[ext_resource type="Script" path="res://visual_editor/expressions/number_literal.gd" id="1_8hpks"]
+
+[node name="number_literal" type="SpinBox"]
+step = 0.001
+allow_greater = true
+allow_lesser = true
+alignment = 1
+script = ExtResource("1_8hpks")
